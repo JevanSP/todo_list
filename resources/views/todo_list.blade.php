@@ -30,9 +30,9 @@
             <tbody>
                 @php $no = 1; @endphp
                 @foreach ($todo_list as $todo)
-                    <tr class="text-center">
+                    <tr class="text-center text-capitalize">
                         <td>{{ $no++ }}</td>
-                        <td class="text-capitalize">
+                        <td>
                             @if ($todo->status == 'selesai')
                                 <strike>{{ $todo->nama }}</strike>
                             @else
@@ -88,7 +88,7 @@
                                         <br>
                                         <label>Prioritas:</label>
                                         <select class="form-control" name="prioritas">
-                                            <option value="rengah" {{ $todo->prioritas == 'rendah' ? 'selected' : '' }}>Rendah</option>
+                                            <option value="rendah" {{ $todo->prioritas == 'rendah' ? 'selected' : '' }}>Rendah</option>
                                             <option value="sedang" {{ $todo->prioritas == 'sedang' ? 'selected' : '' }}>Sedang</option>
                                             <option value="tinggi" {{ $todo->prioritas == 'tinggi' ? 'selected' : '' }}>Tinggi</option>
                                         </select>
