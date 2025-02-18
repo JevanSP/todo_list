@@ -61,13 +61,16 @@
                                     <button class="btn btn-warning btn-sm">🔄 Kembalikan</button>
                                 </form>
                             @endif
-                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                data-bs-target="#modaledit{{ $todo->id }}">✏ Edit</button>
-                            <form action="{{ route('todo.destroy', $todo->id) }}" method="POST" class="d-inline">
-                                @csrf @method('DELETE')
-                                <button class="btn btn-danger btn-sm" onclick="return confirm('Hapus list ini?')">🗑
-                                    Hapus</button>
-                            </form>
+                            @if ($todo->status == 'belum selesai')
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#modaledit{{ $todo->id }}">✏ Edit</button>
+                                <form action="{{ route('todo.destroy', $todo->id) }}" method="POST" class="d-inline">
+                                    @csrf @method('DELETE')
+                                    <button class="btn btn-danger btn-sm" onclick="return confirm('Hapus list ini?')">🗑
+                                        Hapus</button>
+                                </form>
+                            @else
+                            @endif
                         </td>
                         <td>{{ $todo->tgl_ditandai ? $todo->tgl_ditandai : '-' }}</td>
                     </tr>
@@ -88,9 +91,12 @@
                                         <br>
                                         <label>Prioritas:</label>
                                         <select class="form-control" name="prioritas">
-                                            <option value="rendah" {{ $todo->prioritas == 'rendah' ? 'selected' : '' }}>Rendah</option>
-                                            <option value="sedang" {{ $todo->prioritas == 'sedang' ? 'selected' : '' }}>Sedang</option>
-                                            <option value="tinggi" {{ $todo->prioritas == 'tinggi' ? 'selected' : '' }}>Tinggi</option>
+                                            <option value="rendah"
+                                                {{ $todo->prioritas == 'rendah' ? 'selected' : '' }}>Rendah</option>
+                                            <option value="sedang"
+                                                {{ $todo->prioritas == 'sedang' ? 'selected' : '' }}>Sedang</option>
+                                            <option value="tinggi"
+                                                {{ $todo->prioritas == 'tinggi' ? 'selected' : '' }}>Tinggi</option>
                                         </select>
                                     </div>
                                     <div class="modal-footer">
@@ -100,12 +106,11 @@
                             </div>
                         </div>
                     </div>
-
                 @endforeach
             </tbody>
         </table>
-    </div>
 
+        <h5 class="mt-5">History</h5>
         <table class="table table-bordered">
             <thead class="table-dark">
                 <tr class="text-center">
@@ -115,15 +120,23 @@
                     <th>Aksi</th>
                     <th>Tanggal Selesai</th>
                 </tr>
+                @php $no = 1; @endphp
+                @foreach ($history as $p)
             </thead>
-            @foreach ($history as $p)
-            @php $no = 1; @endphp
             <tbody class="text-center">
                 <td>{{ $no++ }}</td>
                 <td>{{ $p->nama }}</td>
-                <td>{{ $p->prioritas }}</td>
                 <td>
-                    <form action="{{ route('todo.destroy', $todo->id) }}" method="POST" class="d-inline">
+                    @if ($p->prioritas == 'rendah')
+                        <span class="badge bg-primary">Rendah</span>
+                    @elseif ($p->prioritas == 'sedang')
+                        <span class="badge bg-warning">Sedang</span>
+                    @else
+                        <span class="badge bg-danger">Tinggi</span>
+                    @endif
+                </td>
+                <td>
+                    <form action="{{ route('todo.destroy', $p->id) }}" method="POST" class="d-inline">
                         @csrf @method('DELETE')
                         <button class="btn btn-danger btn-sm" onclick="return confirm('Hapus list ini?')">🗑
                             Hapus</button>
@@ -131,8 +144,9 @@
                 </td>
                 <td>{{ $p->tgl_ditandai }}</td>
             </tbody>
+            @endforeach
         </table>
-    @endforeach
+    </div>
 
     <div class="modal fade" id="modalcreate" tabindex="-1">
         <div class="modal-dialog">
@@ -152,7 +166,7 @@
                             <option value="">Pilih Prioritas</option>
                             <option value="rendah">Rendah</option>
                             <option value="sedang">Sedang</option>
-                            <option value="tinggi">Tinggi</option>  
+                            <option value="tinggi">Tinggi</option>
                         </select>
                     </div>
                     <div class="modal-footer">
