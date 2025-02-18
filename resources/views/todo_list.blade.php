@@ -106,6 +106,34 @@
         </table>
     </div>
 
+        <table class="table table-bordered">
+            <thead class="table-dark">
+                <tr class="text-center">
+                    <th>No</th>
+                    <th>Nama</th>
+                    <th>Prioritas</th>
+                    <th>Aksi</th>
+                    <th>Tanggal Selesai</th>
+                </tr>
+            </thead>
+            @foreach ($history as $p)
+            @php $no = 1; @endphp
+            <tbody class="text-center">
+                <td>{{ $no++ }}</td>
+                <td>{{ $p->nama }}</td>
+                <td>{{ $p->prioritas }}</td>
+                <td>
+                    <form action="{{ route('todo.destroy', $todo->id) }}" method="POST" class="d-inline">
+                        @csrf @method('DELETE')
+                        <button class="btn btn-danger btn-sm" onclick="return confirm('Hapus list ini?')">🗑
+                            Hapus</button>
+                    </form>
+                </td>
+                <td>{{ $p->tgl_ditandai }}</td>
+            </tbody>
+        </table>
+    @endforeach
+
     <div class="modal fade" id="modalcreate" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">

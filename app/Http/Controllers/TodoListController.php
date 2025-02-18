@@ -10,8 +10,11 @@ class TodoListController extends Controller
     public function index()
     {
         $todo_list = TodoList::all();
-        $title = 'Todo List';
-        return view('todo_list', compact('todo_list', 'title'));
+        $todo_list = TodoList::orderBy("prioritas", "desc")->get();
+        // $todo_list = TodoList::orderBy("FIELD(prioritas, 'tinggi', 'sedang', 'rendah')")->get();
+        $history = TodoList::where('status', 'selesai')->get();
+
+        return view('todo_list', compact('todo_list', 'history'));
     }
 
     public function store(Request $request)
